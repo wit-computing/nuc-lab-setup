@@ -1,0 +1,754 @@
+ <!DOCTYPE html>
+ <html>
+   <head>
+
+     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css" type="text/css">
+     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/solarized_light.min.css" rel="stylesheet" />
+
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/languages/java.min.js"></script>
+     <script>hljs.initHighlightingOnLoad();</script>
+
+      <style>
+
+
+body 
+{
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+}
+
+figcaption
+{
+  margin-bottom: 20px;
+}
+
+.vertical-align
+{
+  display: flex;
+  align-items: center;
+}
+
+.credits
+{
+  min-height:20px;
+}
+    </style>
+
+  </head>
+
+  <body>
+
+  <div class="ui container">
+<style>
+
+
+code
+{
+  font-family: "Monaco";
+  font-size: 110%;
+}
+
+img
+{
+  padding:1px;
+  border:1px solid black;
+}
+
+h1
+{
+  font-style:italic;
+  font-size:130%;
+  border-bottom: thin solid black;
+}
+h2
+{
+  font-size:110%;
+  border-bottom: thin solid black;
+}
+h3
+{
+  font-size:100%;
+  border-bottom: thin solid black;
+}
+
+</style>
+
+<div class="ui fixed top pointing inverted menu labmenu">
+  <header class="header item">
+    <a href="../index.html">
+      <i class="sitemap icon"></i>
+      1: Customized Linux Configuration
+    </a>
+  </header>
+  <div class="right tab-menu menu">
+    <a class="active item" data-tab="Android Toolchain">
+        Android Toolchain
+    </a>
+      <a class="item" data-tab="01">
+        01
+      </a>
+      <a class="item" data-tab="02">
+        02
+      </a>
+      <a class="item" data-tab="03">
+        03
+      </a>
+      <a class="item" data-tab="04">
+        04
+      </a>
+      <a class="item" data-tab="05">
+        05
+      </a>
+      <a class="item" data-tab="06">
+        06
+      </a>
+      <a class="item" data-tab="07">
+        07
+      </a>
+      <a class="item" data-tab="08">
+        08
+      </a>
+    </div>
+</div>
+
+<br><br>
+
+  <div  class="ui tab segment lab" data-tab="Android Toolchain">
+    <h1>Objectives</h1>
+<p>Instructions on installing Android developer toolchain on a NUC running Linux Mint operating system including guidance on installing the Linux system on the NUC and creating a bootable live Linux memory key containing the entire toolchain.</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="01">
+    <h1>Bootable Linux iso</h1>
+<p>Here shall describe how to create a bootable Linux memory key - a USB flash drive. The content of the key shall be a single bootable iso file. Booting this key will launch a live Linux environment that includes a facility to install Linux on a nominated device. In this step we shall install Linux onto the internal disk in the NUC using the bootable key.</p>
+<p>We shall use a Windows machine to create the bootable key but we are not restricted to this and could also have used a Mac or Linux machine. </p>
+<p>Using Windows has a possible advantage in that the application we shall use to create the bootable key, Rufus, is extremely efficient and easy to use. It is, unfortunately, not available for Mac or Linux. Unetbootin is an alternative tool that works on Linux, Mac and Windows.</p>
+<p>We require the bootable key to install the Linux operating system onto the solid state drive (SDD) in the NUC. This is the first step on our journey to created the final bootable key containing an Android toolchain.</p>
+<p>The process in this step is simple:</p>
+<ul>
+<li>Download the latest release of Linux Mint from <a href="http://www.linuxmint.com/download.php">here</a> and save to a folder of your choosing, for example in Downloads.<ul>
+<li>Linux user guides are available <a href="http://www.linuxmint.com/documentation.php">here</a></li>
+<li>An English language copy is also available locally <a href="archives/english_17.2.pdf">here</a>.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Figure 1: Select a Linux Mint version to download" src="img/01.png"></p>
+<ul>
+<li>Download Rufus from <a href="https://rufus.akeo.ie/">here</a> and run it. No installation is required. Just double click on the downloaded file to launch it.</li>
+<li>Insert a key into any of the USB ports on your computer. This particular key should be not less than about 8 GB.</li>
+<li>The key should appear in the Rufus window as shown in Figure 2 here.</li>
+<li>Ensure the key you inserted is recognized.</li>
+<li>Browse to the ISO image and select.</li>
+<li>Press Start.</li>
+</ul>
+<p><img alt="Rufus configured to write a bootable Linux install iso" src="img/02.png"></p>
+<p>When the copying has completed, safely remove the key from the USB port. </p>
+<ul>
+<li>The key is now ready for use. In the next step we shall describe how to install Linux on the NUC.</li>
+</ul>
+  </div>
+  <div  class="ui tab segment lab" data-tab="02">
+    <h1>Install Linux on NUC SSD</h1>
+<p>It may be important to note that the NUC <em>fast boot</em> feature is disabled in the NUC used to prepare this lab.</p>
+<ul>
+<li>If the fast boot is enabled on your NUC and you are unable to boot into the key then it may be worthwhile disabling the fast boot.<ul>
+<li>Disabling and enabling the fast boot is described <a href="http://www.intel.com/support/motherboards/desktop/sb/CS-034965.htm">here</a>.</li>
+</ul>
+</li>
+</ul>
+<p>The NUC should be powered down before commencing.</p>
+<ul>
+<li>Insert the bootable key into a NUC USB port.</li>
+<li>Press the start button.</li>
+<li>If an existing operating system is present on the NUC press F10 to launch a boot screen.<ul>
+<li>Select the bootable key and press return.</li>
+</ul>
+</li>
+<li>If no existing operating system is present in the NUC then pressing F10 should be unnecessary.<ul>
+<li>You may be presented with number of options. The one that should be chosen is: <em>Start Linux Mint 17.2 Cinnamon 64-bit</em> or something equivalent, depending on the version of Linux you are installing.</li>
+</ul>
+</li>
+</ul>
+<p>Once the live Linux system has booted, as shown in Figure 1, double click on the cdrom icon to commence the install process.</p>
+<p>The series of screenshots below is indicative of the installation wizard screens that will be presented:</p>
+<p><img alt="Figure 1: Click on the Install Linux Mint icon to commence installation" src="img/03.png">
+<img alt="Figure 2: Select language" src="img/04.png">
+<img alt="Figure 3: Reminder of minimum install storage space required" src="img/05.png">
+<img alt="Figure 4: Select option to wipe target disk" src="img/06.png">
+<img alt="Figure 5: Accept default partitioning proposal" src="img/07.png">
+<img alt="Figure 6: Select your location" src="img/08.png">
+<img alt="Figure 7: Pick a keyboard layout" src="img/09.png">
+<img alt="Figure 8: Add credentials" src="img/10.png">
+<img alt="Figure 9: Downloading files - recommended not to skip" src="img/11.png">
+<img alt="Figure 10: Still downloading" src="img/12.png">
+<img alt="Figure 11: Done - press Restart and remove key once powerdowned before automatic reboot commences" src="img/13.png"></p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="03">
+    <h1>Install Oracle Java JDK</h1>
+<p>This instruction set is based on <a href="http://community.linuxmint.com/tutorial/view/1372">this</a> web page.</p>
+<p>First download Oracle JDK :</p>
+<ul>
+<li>Download from <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html">here</a> and save to Downloads</li>
+</ul>
+<p><img alt="Figure 1: Download Java JDK" src="img/14.png">
+Create this script named installjdk in a folder - Downloads will do.</p>
+<ul>
+<li>This presumes we have downloaded jdk-7u79-linux-x64.tar.gz to the Dowloads folder.</li>
+<li>This file expands to a folder named jdk1.7.0_79. It's not necessary to do this manually - the script below takes care of that.</li>
+</ul>
+<p>Filename: installjdk</p>
+<pre><code>#!/bin/bash
+
+echo &quot;Updating Linux&quot;
+sudo apt-get update 
+
+echo &quot;Removing Open JDK&quot;
+sudo apt-get remove openjdk*
+
+echo &quot;Change to $HOME/Downloads&quot;
+cd ~/Downloads
+
+echo &quot;Extract tarball. Replace with a name of dowloaded file&quot;
+sudo tar -zxvf jdk-7u79-linux-x64.tar.gz
+
+echo &quot;Create a folder in /opt where jdk will be stored.&quot;
+sudo mkdir -p /opt/java
+
+echo &quot;Move extracted folder to /opt/java&quot;
+sudo mv jdk1.7.0_79 /opt/java
+
+echo &quot;Make JDK system default&quot;
+sudo update-alternatives --install &quot;/usr/bin/java&quot; &quot;java&quot; &quot;/opt/java/jdk1.7.0_79/bin/java&quot; 1
+sudo update-alternatives --set java /opt/java/jdk1.7.0_79/bin/java
+
+echo &quot;Test jdk installation&quot;
+java -version
+</code></pre>
+
+<p>From the terminal in Downloads run this command to make the script executable:</p>
+<pre><code>sudo chmod +x installjdk
+</code></pre>
+
+<p>Then run the script:</p>
+<pre><code>sudo ./installjdk
+</code></pre>
+
+<p>Type Y(es) where prompted to make a decision whether to accept a particular proposal or not during the installation.</p>
+<p>If the script performs as intended the screen output should display java version 1.7.0_79 on or near the end of the display.</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="04">
+    <h1>Install Android Studio</h1>
+<p>We shall install Android Studio from the command line using an <a href="http://itsfoss.com/install-android-studio-ubuntu-linux/">unofficial Personal Package Archives (PPA)</a>.</p>
+<ul>
+<li>At the time of writing Android Studio version 1.3 installs. The latest version is 1.3.2. We will upgrade from within Studio later.</li>
+</ul>
+<p>Create a script file named installandroid in the Downloads folder and add this content:</p>
+<pre><code>#!/bin/bash
+
+sudo add-apt-repository ppa:ubuntu-desktop/ubuntu-make
+sudo apt-get update 
+sudo apt-get install ubuntu-make
+</code></pre>
+
+<p>Still from the terminal in Downloads run this command to make the script executable:</p>
+<pre><code>sudo chmod +x installandroid
+</code></pre>
+
+<p>Then run the script:</p>
+<pre><code>sudo ./installandroid
+</code></pre>
+
+<p>You may be prompted to enter Y(es) on a number of occasions while the script runs.</p>
+<p>Launch Android Studio and wait while Studio downloads various packages and performs further configuration.</p>
+<p>When Android Studio intallation is completed update both Studio and Android SDK.</p>
+<ul>
+<li>If Studio is not yet visible in the menu, launch it using the file manager:<ul>
+<li>/opt/android-studio/bin/studio.sh.</li>
+</ul>
+</li>
+</ul>
+<p>If any Android Studio or Android SDK updates are available you may download these by:</p>
+<ul>
+<li>Launching Android Studio.</li>
+<li>Selecting Configure in the Welcome to Android Studio screen and double clicking.</li>
+<li>We will also configure so that Android SDK also automatically checked for.<ul>
+<li>Selecting Check for Update - see Figure 2.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Figure 1: Platform and Plugin Updates - click on Updates link to configure for automatic Android SDK updates" src="img/59.png">
+<img alt="Figure 2: Automatic checks enabled for both Android Studio and Android SDK updates" src="img/60.png"></p>
+<p>Android Studio may not appear in the menu until after a reboot.</p>
+<ul>
+<li>To add a desktop shortcut (launcher) right click on Android Studio in the menu to open the context menu and then<ul>
+<li>Add to panel</li>
+<li>Add to desktop</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Figure 3: Use context menu to add desktop and panel launchers" src="img/61.png">
+<img alt="Figure 4: Android Studio icon added to panel" src="img/62.png"></p>
+<h2>Code Styling</h2>
+<p>The Android Studio default configuration includes a section dealing with code styling. This refers to such features as the number of spaces used in indentation, the positioning of curly braces - for example is the opening brace inline or on the next line - and so on.</p>
+<p>The default code styling does not really match our requirements and therefore we have provided a customized styling jar. Our customized scheme has made changes to both Java and HTML styling. The following describes how to replace the default styling with this customized version.</p>
+<p>We begin introducing the customized styling by first accessing the Default Preferences pane, that may be opened from within Android Studio Preferences.</p>
+<p><img alt="Figure 5: Default Preferences with customized ICTSkills scheme selected" src="img/50.png"></p>
+<p>Import this scheme as follows:</p>
+<ul>
+<li>Ensure that the <em>Default Preferences</em> window is closed.</li>
+<li>Download <a href="archives/android-studio-settings.jar">customized scheme jar file</a> and save to a temporary location.</li>
+<li>Select Configure as shown in Figure 6.</li>
+</ul>
+<p><img alt="Figure 6: Welcome to Android Studio - Configure" src="img/51.png"></p>
+<ul>
+<li>Select Import Setting as shown in Figure7.</li>
+</ul>
+<p><img alt="Figure 7: Welcome to Android Studio - Import Settings" src="img/52.png"></p>
+<ul>
+<li>Browse to the location where you have saved the settings jar file.</li>
+<li>Select the file and press Choose. See Figure 8.</li>
+</ul>
+<p><img alt="Figure 8: Import settings file" src="img/53.png"></p>
+<ul>
+<li>In the <em>Select Components to Import</em> window select only <em>Code Style</em> as shown in Figure 9.</li>
+</ul>
+<p><img alt="Figure 9: Select only Code Style" src="img/54.png"></p>
+<ul>
+<li>Press OK in the <em>Restart Needed</em> window.</li>
+</ul>
+<p><img alt="Figure 10: Press OK, shut down and restart Android Studio" src="img/55.png"></p>
+<p>This styling will now be applied to any new projects you create.</p>
+<p>You may reformat any existing projects with this newly imported style as follows:</p>
+<ul>
+<li>In the project tool window, select module or directory to which you want to apply your reformatting.</li>
+<li>From the main menu, select Code | Reformat Code (or press ⌥ ⌘ L on a Mac).</li>
+<li>Alternatively, in the Android tool window, as shown in Figure 10, right-click the app directory and from the context menu and select Reformat Code.
+-In the Reformat Code dialog box accept the default settings for reformatting, as shown in Figure 11, and click Run.</li>
+</ul>
+<p><img alt="Figure 11: Reformat using imported style" src="img/56.png"></p>
+<p><img alt="Figure 12: Accept defaults" src="img/57.png"></p>
+<p>Note that where embedded Google maps comprise part of a project, Google Play services must be installed.</p>
+<p>In all cases the app's build.gradle file must be consistent with the installed platform configuration. It's quite likely that for some updates of Android Studio the build.gradle will require to be manually changed to ensure this consistency. See, for example Figures 13 and 14.</p>
+<p><img alt="Figure 13: build.gradle consistent with installation shown in Figure 14" src="img/18.png">
+<img alt="Figure 14: Android SDK Manager showing installation that includes Play services" src="img/19.png"></p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="05">
+    <h1>Git &amp; SSH</h1>
+<h2>Git</h2>
+<p>This step is based on information available from <a href="http://tecadmin.net/install-git-on-ubuntu/">TecAdmint.net</a> article: How to Install Git on Ubuntu and Linux.</p>
+<p>This script installs git 2.5.0 at the time of writing this lab (August 27 2015).</p>
+<pre><code>#!/bin/bash
+
+echo &quot;Installing latest git from PPA&quot;
+echo &quot;http://tecadmin.net/install-git-on-ubuntu/&quot;
+
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt-get update
+sudo apt-get install git
+
+echo &quot;Check version installed git&quot;
+git --version
+</code></pre>
+
+<p>When git is first used and before a commit is made it is necessary to set the user's email. Here we are using a placeholder ictskills@wit.ie.</p>
+<pre><code>git config --global user.email ictskills@wit.ie
+</code></pre>
+
+<p>Create .bashrc file in $HOME and add these aliases:</p>
+<pre><code>#Git aliases pretty print logs
+
+alias gitp=&quot;git log --pretty=format:'%C(yellow)%h %&lt;(24)%C(red)%ad  %Creset%s' --date=local --max-count=10&quot;
+alias gitpp=&quot;git log --pretty=format:'%C(yellow)%h %&lt;(24)%C(red)%ad  %Creset%s' --date=local&quot;
+
+#Include author
+alias gitpa=&quot;git log --pretty=format:'%C(yellow)%h %&lt;(24)%C(red)%ad   %&lt;(18)%C(green)%an %C(reset)%s' --date=local --max-count=10&quot;
+alias gitppa=&quot;git log --pretty=format:'%C(yellow)%h %&lt;(24)%C(red)%ad   %&lt;(18)%C(green)%an %C(reset)%s' --date=local&quot;
+
+#Log tags
+alias gitag=&quot;git log --no-walk --tags --pretty=format:' %C(yellow)%h %&lt;(30)%Cgreen%d  %Cred%ad  %Creset%s' --date=local&quot;
+
+</code></pre>
+
+<ul>
+<li>gitp pretty prints logs on the last 10 commits.</li>
+<li>gitpp pretty prints logs of all commits.</li>
+<li>gitpa includes the authors' emails in the log output on the last 10 commits.</li>
+<li>gitppa same as gitp except prints logs on all commits.</li>
+<li>gitag displays logs of all tags.</li>
+</ul>
+<p><img alt="Figure 1: Git logging aliases" src="img/17.png"></p>
+<h2>SSH</h2>
+<p>The following script will install an ssh client, create a .ssh folder, copy your keys to .ssh, start the ssh agent and load the key. It will then attempt to clone a project from your BitBucket account named donation-android-2015. The script will set file permissions also. These must be correct for ssh to work properly.</p>
+<p>For the script to work you need to :</p>
+<ul>
+<li>Generate a password-protected key pair.<ul>
+<li>Instructions are available online <a href="https://help.github.com/articles/generating-ssh-keys/">here</a>.</li>
+</ul>
+</li>
+<li>Launch your Linux system.</li>
+<li>Create a temporary folder named, for example, ssh in your Downloads folder.</li>
+<li>Copy your key pair into ssh.</li>
+<li>Open the script <em>installkeys</em> and customize for your particular environment.<ul>
+<li>This script assumes <em>user:group</em> is <em>ictskills:ictskills</em>.</li>
+<li>It assumes your keys are named <em>id_ictskills_rsa</em> and <em>id_ictskills_rsa.pub</em>.</li>
+</ul>
+</li>
+<li><a href="https://confluence.atlassian.com/bitbucket/add-an-ssh-key-to-an-account-302811853.html">Add the public key</a> <em>id_ictskills_rsa.pub</em> to your BitBucket account.</li>
+<li>Ensure there is a test repo in BitBucket named <em>donation-android-2015</em>.</li>
+<li>Create file named <em>config</em> in the folder Downloads/ssh and add the following:</li>
+</ul>
+<pre><code>Host bitbucket.org
+ IdentityFile $HOME/.ssh/id_ictskills_rsa
+</code></pre>
+
+<ul>
+<li>
+<p>This file facilites addition of further key pairs to your system.</p>
+</li>
+<li>
+<p>Open a terminal, cd to ssh and run the script <em>installkeys</em></p>
+</li>
+</ul>
+<pre><code>sudo ./installconfigssh
+</code></pre>
+
+<p>Filename: installconfigssh</p>
+<pre><code>#!/bin/bash
+
+# This script requires that the keys are present in a folder named ssh which is located in the same folder as the script.
+# The sample keys provided are password protected (as is necessary): password for sample keys used here is ictskills
+
+echo &quot;Updating and installing openssh&quot;
+sudo apt-get update
+sudo apt-get install openssh-client
+
+echo &quot;Create $HOME/.ssh folder&quot;
+sudo mkdir $HOME/.ssh
+sudo chmod 700 $HOME/.ssh
+
+echo &quot;Change ownership from root to user .ssh folder&quot;
+sudo chown ictskills:ictskills $HOME/.ssh
+
+echo &quot;Copy keys from- $HOME/Downloads/ssh to.ssh&quot;
+cd $HOME/Downloads
+cp ssh/id_ictskills_rsa $HOME/.ssh
+cp ssh/id_ictskills_rsa.pub $HOME/.ssh
+cp ssh/config $HOME/.ssh
+cd $HOME/.ssh
+sudo chown ictskills:ictskills id_ictskills_rsa
+sudo chown ictskills:ictskills id_ictskills_rsa.pub
+sudo chown ictskills:ictskills config
+
+echo &quot;Setting permissions on config file and private key&quot;
+sudo chmod 600 config
+sudo chmod 600 id_ictskills_rsa
+sudo chmod 644 id_ictskills_rsa.pub
+
+echo &quot;Check presence of keys&quot;
+ls -l $HOME/.ssh
+
+echo &quot;Starting ssh agent&quot;
+eval &quot;$(ssh-agent -s)&quot;
+
+echo &quot;Loading key into ssh agent&quot;
+ssh-add $HOME/.ssh/id_ictskills_rsa
+
+echo &quot;Verifying ssh configuration&quot;
+ssh -T git@bitbucket.org
+
+echo &quot;Check key add to ssh&quot;
+ssh-add -l
+
+echo &quot;Create a repo folder and acquire ownership&quot;
+sudo mkdir $HOME/repo
+sudo chown ictskills:ictskills $HOME/repo
+echo &quot;Check user:group ownership&quot;
+stat -c &quot;%U % G&quot; repo
+echo &quot;Cloning a sample project from BitBucket&quot;
+cd $HOME/repo
+git clone git@bitbucket.org:usplitu/donation-android-2015.git
+
+</code></pre>
+
+<p>Further details on setting up keys and accessing BitBucket are available on the accompanying lab, Basic Git, in particular on steps 5 and 6.</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="06">
+    <h1>Miscellaneous tools</h1>
+<h2>Sublime Text editor</h2>
+<p>Launch the Software Manager: Menu | Administration.</p>
+<p>Search for Sublime Text in the Software Manager.</p>
+<p>When discovered, click the install button.</p>
+<p>Search for Sublime Text in the menu and create launcher shortcuts on the deskop and on the panel at the foot of the screen:</p>
+<ul>
+<li>Right click to open context menu.</li>
+<li>Add to panel.</li>
+<li>Add to deskop.</li>
+</ul>
+<p>Sublime Text may also be run with the terminal command <em>subl</em>.</p>
+<p><img alt="Figure 1: Installing Sublime Text using Software Manager" src="img/15.png"></p>
+<h2>Google Chrome browser</h2>
+<p><img alt="" src="img/21.png"></p>
+<p>Note: Firefox is installed by default.</p>
+<p>You may use this script to download &amp; install Google Chrome.</p>
+<pre><code>#!/bin/bash
+
+echo &quot;Fetching Google Chrome&quot;
+sudo sh -c 'echo &quot;deb http://dl.google.com/linux/chrome/deb/ stable main&quot; &gt;&gt; /etc/apt/sources.list.d/google.list'
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo apt-get update
+
+echo &quot;Installing Chrome&quot;
+sudo apt-get install google-chrome-stable
+</code></pre>
+
+<h2>Password Manager</h2>
+<p>Password Gorilla password manager runs on Mac, Linux and Windows.</p>
+<p>It's downloadable using the Software Manager.</p>
+<p><img alt="Figure 2: Installing Password Gorilla password manager" src="img/20.png"></p>
+<h2>System Back</h2>
+<p>This script will install System Back:</p>
+<pre><code>#!/bin/bash
+
+echo &quot;Fetching System Back and updating&quot;
+sudo add-apt-repository ppa:nemh/systemback
+sudo apt-get update
+
+echo &quot;Installing System Back&quot;
+sudo apt-get install systemback
+</code></pre>
+
+<h2>Clonezilla</h2>
+<p>Clonezilla facilitates creating a backup image of a disk.</p>
+<p>Here is the <a href="http://www.dedoimedo.com/computers/free_imaging_software.html">Dedoimedo tutorial</a>.</p>
+<p>Following are the steps to create a bootable Clonezilla usb key:</p>
+<ul>
+<li>
+<p>Download Clonezilla iso from <a href="http://clonezilla.org/downloads/download.php?branch=stable">here</a>.</p>
+<ul>
+<li>For example: <strong>clonezilla-live-2.4.2-32-amd64.iso</strong></li>
+</ul>
+</li>
+</ul>
+<p><img alt="Figure 3: Clonezilla downloads" src="img/22.png"></p>
+<ul>
+<li>Create the live Clonezilla key using Tuxboot. This is installable with the following script:</li>
+</ul>
+<p>Filename: installtuxboot</p>
+<pre><code>#!/bin/bash
+
+echo &quot;Fetching Tuxboot and updating&quot;
+sudo apt-add-repository ppa:thomas.tsai/ubuntu-tuxboot
+sudo apt-get update
+
+echo &quot;Installing and testing Tuxboot&quot;
+sudo apt-get install tuxboot
+sudo tuxboot
+</code></pre>
+
+<p><img alt="Figure 4: Tuxboot being configured to create bootable live Clonezilla usb key" src="img/23.png"></p>
+<h2>Linux Mint 17 Menu</h2>
+<p>Editing the menu can prove very problematic. Here are some tips:</p>
+<ul>
+<li>Do not install Alacarte - a menu editor. It may introduces instability that would prove difficult to resolve.</li>
+<li>Instead run :</li>
+</ul>
+<pre><code>sudo cinnamon-menu-editor
+</code></pre>
+  </div>
+  <div  class="ui tab segment lab" data-tab="07">
+    <h1>Systemback</h1>
+<p>Systemback is an application that allows one to backup and restore a system. </p>
+<ul>
+<li>We describe one of its features here whereby a snapshot of the Linux install on the internal SSD in the NUC - including all its data and applications - is created and written to an iso file. The application Unetbootin is then used to add this iso file to a usb 3 key and make the key bootable. When the NUC is booted from this key a number of options are presented, one of which is to launch a live instance of the entire Linux system (including apps and data) that was captured in the snapshot.</li>
+</ul>
+<p>Warning: You might consider deleting the /home/Systemback once done with Systemback session, otherwise next time you run Systemback you will be also backing up previous archive material and will quickly run out of root memory.</p>
+<ul>
+<li>Alternatively set the Storage folder to somewhere other than /home such as an external usb partition...but <a href="https://answers.launchpad.net/systemback/+question/256380">good luck with that should you try</a>.<ul>
+<li>I strongly recommend against attempting to store anywhere but at the default /home. Systemback seems to have a bug whereby if you attempt to do so then subsequent attempts to change to /home may fail, the iso is nowhere to be found, and deleting and reinstalling Systemback does not provide an easy fix.</li>
+</ul>
+</li>
+</ul>
+<p>Here are the steps:</p>
+<ul>
+<li>
+<p>Launch Systemback.</p>
+</li>
+<li>
+<p>In Point Operations press Create new button.</p>
+</li>
+</ul>
+<p><img alt="Figure 1: Systemback - Press Create new button to create a restore point" src="img/24.png"></p>
+<ul>
+<li>When done, press Live System Create button.</li>
+<li>Tick the checkbox: Include the user data files.</li>
+<li>Press Create New button and wait till Creating Live system completes.</li>
+</ul>
+<p><img alt="" src="img/27.png">
+<img alt="" src="img/28.png"></p>
+<ul>
+<li>
+<p>Select newly created image in the Created Live Images panel.</p>
+</li>
+<li>
+<p>Press Convert to ISO.</p>
+</li>
+</ul>
+<p>By default the ISO is located in /home.</p>
+<p>You may also write the live image to a target usb device:</p>
+<ul>
+<li>
+<p>Insert a target USB device - key or disk.</p>
+</li>
+<li>
+<p>Press refresh button: the target device should appear in the Write target panel as shown in Figure 2.</p>
+</li>
+</ul>
+<p><img alt="Figure 2: Ready to Convert to ISO and/or Write to target" src="img/25.png"></p>
+<p>To create a bootable live usb key containing the restore point image:</p>
+<ul>
+<li>Download and install <a href="http://unetbootin.github.io/">Unetbootin</a> on your internal SSD Linux system (where you are currently operating) using the instructions on the download site which are assembled in this script:ß</li>
+</ul>
+<pre><code>#!/bin/bash
+
+echo &quot;Download and install UNetbootin&quot;
+sudo add-apt-repository ppa:gezakovacs/ppa
+sudo apt-get update
+sudo apt-get install extlinux
+sudo apt-get install unetbootinß
+
+</code></pre>
+
+<ul>
+<li>
+<p>Move the Systemback generated iso from /home to /root.</p>
+<ul>
+<li>The reason is that /root is the default location where the iso is sought when browse within the UNetbootin app. Unless you run Unetbootin as root user.</li>
+</ul>
+</li>
+<li>
+<p>Run unetbootin:</p>
+</li>
+<li>Switch to the Download folder containing the unetbootin binary.</li>
+<li>Make it executable: execute chmod +x unetbootin-linux64-xxx.bin</li>
+<li>Run it: ./unetbootin-linux64-xxx.</li>
+<li>Configure the UNetbootin window: an example is shown in Figure 3.</li>
+</ul>
+<p><img alt="Figure 3: Unetbootin ready to go" src="img/26.png"></p>
+<p>This tutorial, <a href="http://www.unixmen.com/systemback-restore-linux-system-previous-state/">Systemback: Restore YourLinux System To Previous State</a> provides more detailed information.</p>
+<h2>Dropbox</h2>
+<p>Filename: installdropbox</p>
+<pre><code>wget https://linux.dropbox.com/packages/ubuntu/dropbox_1.6.0_amd64.deb
+sudo dpkg -i dropbox_1.6.0_amd64.deb
+</code></pre>
+
+<p>Edit crontab to start dropbox daemon on reboot:</p>
+<pre><code>crontab -e
+</code></pre>
+
+<p>Add:</p>
+<pre><code>@reboot ~/.dropbox-dist/dropboxd
+</code></pre>
+
+<p>You may verify crontab correctly edited:</p>
+<pre><code>crontab -l
+</code></pre>
+
+<h2>Sharing Folders</h2>
+<p>The following describes how to share the Linux Download folder with computers running Mac or Windows operating systems on the same network:</p>
+<ul>
+<li>Using Software Manager install system-config-samba.</li>
+<li>From menu, launch Samba.</li>
+<li>In Samba Server Configuration window:<ul>
+<li>Delete the printer share</li>
+<li>Create a user named <em>ictskills</em>:<ul>
+<li>Preferences | Samba Users | Add User<ul>
+<li>Unixuser name: ictskills</li>
+<li>Samba password: ictskills</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Add a share<ul>
+<li>File | Add Share opens Create Samba Share window<ul>
+<li>Basic:<ul>
+<li>Directory: browse to Downloads</li>
+<li>Share name: Downloads</li>
+<li>Description: as you like it</li>
+<li>Tick Writable and Visible</li>
+</ul>
+</li>
+<li>Access:<ul>
+<li>Tick ictskills  - the allowed user.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The Downloads folder should be accessible for reading and writing from other machines on the network:<ul>
+<li>login : ictskills</li>
+<li>pass: ictskills</li>
+</ul>
+</li>
+</ul>
+<p>Example: in a Mac Finder select menu Goto | Connect to server and provide the server address of the Linux box:</p>
+<ul>
+<li>smb://192.168.61.3 for example.</li>
+</ul>
+  </div>
+  <div  class="ui tab segment lab" data-tab="08">
+    <h1>Archives</h1>
+<p>A compressed archive of the install scripts is available <a href="archives/installscripts.zip">here</a></p>
+  </div>
+<script>
+$('.ui.menu .item')
+  .tab({
+    history: true,
+    historyType: 'hash'
+  })
+;
+</script>
+   </div>
+
+
+
+  <br><br>
+  <div class="ui bottom fixed borderless menu">
+    <div class="ui small item">
+    <p id="footertext">
+    Prepared by  John Fitzgerald (johnjfitzgerald@outlook.com). Except where otherwise noted, this content is licensed under a
+     <a  href="http://creativecommons.org/licenses/by-nc/4.0/" title="External link to http://creativecommons.org/licenses/by-nc/4.0/"
+       target="_blank">Creative Commons Attribution-NonCommercial 4.0 License
+     </a>
+     </p>
+    </div>
+  </div>    <script>
+
+$(document).ready(function()
+{
+  $("img").addClass ("ui image");
+
+  var images = $(".lab img");
+  jQuery.each(images, function(i)  {
+    if((images[i].alt).length > 0)
+    {
+      var div_img = $(document.createElement("div")).addClass("ui segment");
+      $(images[i]).wrap(div_img);
+      var div_label = $(document.createElement("div")).addClass("ui ribbon teal top attached label");
+      div_label.append(images[i].alt);
+      $(div_label).insertBefore(images[i]);
+    }
+  });
+})    </script>
+
+  </body>
+ </html>
