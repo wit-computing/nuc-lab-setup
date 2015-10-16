@@ -148,22 +148,23 @@ h3
 useradd nucadmin
 /* provide password */
 passwd nucadmin
-/* add user to sudo group, thus granting admin privilege*/
-adduser nucadmin sudo
 /* create folder /home/nucadmin */
 mkdir /home/nucadmin
+/* add user to sudo group, thus granting admin privilege*/
+adduser nucadmin sudo
 /* change ownership */
+cd home
 chown nucadmin:nucadmin nucadmin
 </code></pre>
 
 <pre><code>/* create standard account */
 useradd ictskills
 /* provide password */
-passwd nucadmin
+passwd ictskills
 /* create folder /home/ictskills */
 mkdir /home/ictskills
 /* change ownership */
-chown :ictskills:ictskills ictskills
+chown ictskills:ictskills ictskills
 </code></pre>
 
 <h2>SSH backdoor installation</h2>
@@ -178,7 +179,7 @@ chown :ictskills:ictskills ictskills
 </ul>
 <pre><code>mkdir /home/nucadmin/.ssh
 /* create authorized_keys file */
-cd ./ssh
+cd /home/nucadmin/.ssh
 touch authorized_keys
 /* copy public key to authorized_keys file */
 /* set permissions: .ssh drwx------ */
@@ -190,7 +191,7 @@ chown -R nucadmin:nucadmin .ssh
 </code></pre>
 
 <p>Modify sudoers file:</p>
-<pre><code>sudo visudo /etc/sudoers
+<pre><code>sudo visudo
 </code></pre>
 
 <p>Add to sudoers file:</p>
@@ -201,8 +202,10 @@ chown -R nucadmin:nucadmin .ssh
 <p>Official Ansible documentation: <a href="http://docs.ansible.com/ansible/intro_installation.html#installation">Installation</a>.</p>
 <p>Ansible ran on OSX Mavericks without any issues arising. Problems were encountered on OSX Yosemite and Ubuntu Linux. In the case of Ubuntu the following additional software was required:</p>
 <pre><code>/* Installation Ansible on Ubuntu Linux */
-sudo apt-get install python-setuptools
-sudo apt-get install easy_install
+// http://www.saltycrane.com/blog/2010/02/how-install-pip-ubuntu/
+apt-get install python-pip python-dev build-essential 
+pip install --upgrade pip 
+apt-get install easy_install
 sudo -H pip install paramiko PyYAML Jinja2 httplib2 six
 </code></pre>
 
