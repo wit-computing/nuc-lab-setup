@@ -1,0 +1,536 @@
+ <!DOCTYPE html>
+ <html>
+   <head>
+
+     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css" type="text/css">
+     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/solarized_light.min.css" rel="stylesheet" />
+
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/languages/java.min.js"></script>
+     <script>hljs.initHighlightingOnLoad();</script>
+
+      <style>
+
+
+body 
+{
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+}
+
+figcaption
+{
+  margin-bottom: 20px;
+}
+
+.vertical-align
+{
+  display: flex;
+  align-items: center;
+}
+
+.credits
+{
+  min-height:20px;
+}
+    </style>
+
+  </head>
+
+  <body>
+
+  <div class="ui container">
+<style>
+
+
+code
+{
+  font-family: "Monaco";
+  font-size: 110%;
+}
+
+img
+{
+  padding:1px;
+  border:1px solid black;
+}
+
+h1
+{
+  font-style:italic;
+  font-size:130%;
+  border-bottom: thin solid black;
+}
+h2
+{
+  font-size:110%;
+  border-bottom: thin solid black;
+}
+h3
+{
+  font-size:100%;
+  border-bottom: thin solid black;
+}
+
+</style>
+
+<div class="ui fixed top pointing inverted menu labmenu">
+  <header class="header item">
+    <a href="../index.html">
+      <i class="sitemap icon"></i>
+      Customized Linux Configuration
+    </a>
+  </header>
+  <div class="right tab-menu menu">
+    <a class="active item" data-tab="Populate NUC (ansible)">
+        Populate NUC (ansible)
+    </a>
+      <a class="item" data-tab="01">
+        01
+      </a>
+      <a class="item" data-tab="02">
+        02
+      </a>
+      <a class="item" data-tab="Cutting room bin">
+        Cutting room bin
+      </a>
+    </div>
+</div>
+
+<br><br>
+
+  <div  class="ui tab segment lab" data-tab="Populate NUC (ansible)">
+    <h1>Objectives</h1>
+<p>Use Ansible to install applications on a customized Ubuntu Linux platform. Two patterns described, one in which the software applications are deployed over ssh, the other in which the applications are deployed to local host. The fist pattern targetted to administrators for servicing a range of remote machines. The latter pattern allows users to run ansible on their machines and install software on the same machines. </p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="01">
+    <h1>Approach</h1>
+<p>In this lab we have chosen to work with the Ubuntu distribution rather than Linux Mint. The reason for doing so is the ease with which Ubuntu Customization Kit (UCK) may be used to customize a linux installation iso.</p>
+<p>We customize the default Ubuntu iso such that the installation is Ansible host-configured. This means, for example, that Ansible may be run on a command machine without the need for any further configuration to any of the host machines.</p>
+<p>Finally, we create two sets of playbooks and locate them on a remote repository. One set allows a system administrator to clone the repo and install selected software on a remote set of host machines. The other set facilitates using a machine as both command and host. In other words, Ansible may be used to install software on the same machine on which it itself is running.</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="02">
+    <h1>Customizing (remastering) liveCD</h1>
+<h2>Customizing (remastering) Ubuntu</h2>
+<p>Instructions on remastering a Ubuntu LiveCD using Ubuntu Customization Kit (UCK) and commandline tools is available <a href="https://help.ubuntu.com/community/LiveCDCustomization">here</a>.</p>
+<p>A simpler approach is to use the GUI version, <a href="http://www.howtogeek.com/109736/how-to-create-a-custom-ubuntu-live-cd-or-usb/">How to Create a Custom Ubuntu Live CD or USB the Easy Way</a>. This tutorial is based on Ubuntu 11.10. The current version of Ubuntu is 14.04 but the changes in the use of UCK are minor. In preparing this lab, UCK was installed as follows:</p>
+<pre><code>sudo apt-get install uck
+</code></pre>
+
+<p>In running UCK one has the option of customizing the LiveCD in the UCK customization console that is automatically launched as one progresses through the UCK wizard and as shown in Figure 1. Executing <em>exit</em> when customization is complete runs UCK to completion.</p>
+<p><img alt="Figure 1: UCK customization console" src="img/01.png"></p>
+<h2>Customizing (remastering) Linux Mint install</h2>
+<p>Linux Mint was successfully remastered using <a href="https://github.com/neurobin/JLIVECD">LIVECD</a>.</p>
+<ul>
+<li>Beware a gotcha: once you exit chroot environment a series of questions are presented. Ensure you select y(es) when prompted if you wish to retain <em>/edit/home</em>. The default is n(o). If you accept the default then any changes you may have made to the <em>/home</em> directory will be lost. Such changes would include adding new users. Ouch!</li>
+</ul>
+<h2>Remastering</h2>
+<p>The following is a list of customizations in preparing administration and student LiveCDs as discussed in the accompanying presentation <em><a href="archives/NUC-configuration.pdf">Intel NUC Configuration: Customized linux installation</a></em>.</p>
+<ul>
+<li>create user accounts</li>
+<li>install Open SSH server</li>
+<li>install ssh tunnelling</li>
+<li>install Ansible</li>
+<li>install git</li>
+<li>install and configure Samba</li>
+</ul>
+<p>In creating user accounts do not confuse commands <em>useradd</em> and <em>adduser</em>.</p>
+<ul>
+<li>Use <strong>adduser</strong> as the default version also creates home directory and, most importantly, sets the correct permissions.</li>
+</ul>
+<p>This configuration allows remote host machines to be remotely managed and students to manage their own machines. </p>
+<p>Two LiveCDs have been customized, one for administrators, the other for students.</p>
+<p>Here is a summary of the steps taken to configure the administrator LiveCD.</p>
+<h2>User Accounts</h2>
+<ul>
+<li>Two user accounts added:<ul>
+<li>an administration account <em>nucadmin</em> and</li>
+<li>a standard account <em>ictskills</em></li>
+</ul>
+</li>
+</ul>
+<p>To create an admin account make it member sudo group:</p>
+<pre><code>/* create administration account: adduser also creates home directory */
+adduser nucadmin
+/* add user to sudo group, thus granting admin privilege*/
+adduser nucadmin sudo
+</code></pre>
+
+<p>To delete a user:</p>
+<pre><code>deluser username
+</code></pre>
+
+<p>To create standard account (not a member of sudo group)</p>
+<pre><code>/* create standard account */
+adduser ictskills
+</code></pre>
+
+<p>A useful linux command to display a list of all groups is:</p>
+<pre><code>getent group
+</code></pre>
+
+<h2>SSH backdoor installation</h2>
+<p>These are the required steps. It is important to set permissions appropriately for all newly created entities.</p>
+<ul>
+<li>Install ssh server.</li>
+<li>Create user (nucadmin) and add to sudo group.</li>
+<li>Ensure user folder (/home/nucadmin) is present.</li>
+<li>Create .ssh folder.</li>
+<li>Create a file .ssh/authorized_keys.</li>
+<li>Add the public key (in this case nuc_rsa.pub) to the file .ssh/authorized_keys.</li>
+<li>Modify /etc/sudoers to permit nominated user (nucadmin) to ssh login without password.</li>
+</ul>
+<pre><code>/* Install ssh server */
+apt-get install openssh-server
+</code></pre>
+
+<pre><code>/* Create .ssh folder + authorized_keys file */
+mkdir /home/nucadmin/.ssh
+/* create authorized_keys file */
+cd /home/nucadmin/.ssh
+touch authorized_keys
+/* copy public key to authorized_keys file */
+/* set permissions: .ssh drwx------ */
+chmod go-rwx .ssh
+// which is the same as:
+chmod 700 .ssh
+/* authorized_keys -rw------- */
+chmod 600 authorized_keys
+/* ensure folder and content owned by nucadmin */
+chown -R nucadmin:nucadmin .ssh
+/* if ssh key-pair included set these permissions */
+chmod 600 ictskills_rsa
+chmod 644 ictskills_rsa.pub
+</code></pre>
+
+<p>Modify sudoers file to permit ssh access without password requirement:</p>
+<pre><code>sudo visudo
+</code></pre>
+
+<p>Add to sudoers file:</p>
+<pre><code>nucadmin ALL=(ALL:ALL) NOPASSWD: ALL
+</code></pre>
+
+<p>Note: without private key, ssh tunnelling not possible.</p>
+<h2>Ansible installation</h2>
+<p>The approach (finally) worked in Ubuntu as described <a href="https://launchpad.net/~ansible/+archive/ansible">here</a>.</p>
+<pre><code>$ sudo apt-get install software-properties-common
+$ sudo apt-add-repository ppa:ansible/ansible
+$ sudo apt-get update
+$ sudo apt-get install ansible
+</code></pre>
+
+<p>Official Ansible documentation: <a href="http://docs.ansible.com/ansible/intro_installation.html#installation">Installation</a>.</p>
+<p>Ansible ran on OSX Mavericks without any issues arising. Problems were encountered on OSX Yosemite and Ubuntu Linux. </p>
+<p>Install on Linux Mint as follows:</p>
+<pre><code>apt-get install python-setuptools
+easy_install pip
+pip install ansible
+</code></pre>
+
+<p>If the above does not work on Ubuntu check out <em>Cutting room bin</em>.</p>
+<p>Installing from source:</p>
+<pre><code>git clone git://github.com/ansible/ansible.git --recursive
+</code></pre>
+
+<p>To run an Ansible playbook:</p>
+<pre><code>cd ./ansible
+source ./hacking/env-setup
+/* change into playbooks folder and run ansible, for example: */
+cd ../playbooks
+ansible-playbook play.yml
+ansible-playbook -i ansible_hosts play.yml
+ansible-playbook -i ansible_hosts -l 192.168.61.16
+</code></pre>
+
+<h2>Git installation</h2>
+<pre><code>/* Install git */
+sudo apt-get install git
+
+/* Unset name and email */
+git config --global --unset-all user.email
+git config --global --unset-all user.name
+
+</code></pre>
+
+<h2>Samba installation and configuration</h2>
+<p>Install and configure samba</p>
+<pre><code>apt-get update
+apt-get install samba
+/* provide password */
+smbpasswd -a nucadmin
+
+</code></pre>
+
+<p>Create a shared folder:</p>
+<pre><code>mkdir /home/nucadmin/Shared
+chown nucadmin:nucadmin Shared
+</code></pre>
+
+<p>Backup /etc/samba/smb.conf</p>
+<ul>
+<li>Add following to end /etc/samba/smb.conf (retain spaces either side = sign):</li>
+</ul>
+<pre><code>[Shared]
+path = /home/nucadmin/Shared
+available = yes
+valid users = nucadmin
+read only = no
+browseable = yes
+public = yes
+</code></pre>
+  </div>
+  <div  class="ui tab segment lab" data-tab="Cutting room bin">
+    <h2>Definitions</h2>
+<p>Official glossary <a href="http://docs.ansible.com/ansible/glossary.html">here.</a></p>
+<p><strong>Host</strong>: the remote machine
+  <strong>Control machine</strong>: the machine on which ansible is installed and the playbooks run</p>
+<h2>Variables</h2>
+<p>The file <em>group_vars/all.yml</em> should be configured for your particular command machine.</p>
+<h2>Set up ansible</h2>
+<p>Official documentation <a href="http://docs.ansible.com/">here.</a></p>
+<h2>Ansible documentation and download</h2>
+<p><a href="http://docs.ansible.com/ansible/intro_installation.html">Here</a> is the official download documentation</p>
+<pre><code>  git clone git://github.com/ansible/ansible.git --recursive
+  cd ./ansible
+</code></pre>
+
+<h2>Ubuntu ansible installation</h2>
+<p>Installing on Ubuntu where method described in previous step fails:</p>
+<p>In the case of Ubuntu the following additional software was required:</p>
+<pre><code>/* Installation Ansible on Ubuntu Linux */
+// http://www.saltycrane.com/blog/2010/02/how-install-pip-ubuntu/
+apt-get install python-pip python-dev build-essential 
+pip install --upgrade pip 
+</code></pre>
+
+<p>Suggested: </p>
+<pre><code>python-genshi
+</code></pre>
+
+<p>Install the following using <em>pip</em>:</p>
+<pre><code>paramiko
+PyYAML
+Jinja2
+httplib2
+six
+</code></pre>
+
+<p>Where sudo required (non-chroot):</p>
+<pre><code>sudo -H pip install paramiko; \
+sudo -H pip install PyYAML ; \
+sudo -H pip install Jinja2 ; \
+sudo -H pip install httplib2 ; \
+sudo -H pip install six
+</code></pre>
+
+<p>Remastering Linux Mint (in chroot): following may help with problems in attempts to install above:</p>
+<pre><code>http://askubuntu.com/questions/275861/problem-installing-python-dev
+
+</code></pre>
+
+<h2>Run playbooks</h2>
+<ul>
+<li>cd into ansible folder and execute </li>
+</ul>
+<pre><code>source ./hacking/env-setup
+</code></pre>
+
+<ul>
+<li>
+<p><strong>from the folder ansible,</strong> (ansible is current directory)  cd to folder ansible-playbook-01.</p>
+</li>
+<li>
+<p>then run the playbook:</p>
+</li>
+</ul>
+<pre><code>ansible-playbook -i ansible_hosts play.yml
+</code></pre>
+
+<h2>Hosts file</h2>
+<p>File <em>ansible_hosts</em> must be populated. For example:</p>
+<pre><code>[allnucs]
+192.168.61.29 ansible_ssh_private_key_file={{KEYS_PATH}}/nuc_rsa ansible_ssh_user=admin
+192.168.61.16 ansible_ssh_private_key_file={{KEYS_PATH}}/nuc_rsa ansible_ssh_user=admin
+</code></pre>
+
+<p>Example, run against all hosts listed in your file <em>ansible_hosts</em>:</p>
+<pre><code>ansible-playbook -i ansible_hosts update-all-nucs.yml
+</code></pre>
+
+<p>Example, run against single host (which must be also listed in ansible_hosts)</p>
+<pre><code>ansible-playbook -i ansible_hosts -l 192.168.61.16 update-all-nucs.yml*
+
+</code></pre>
+
+<h2>Host machine configuration</h2>
+<p>Successful run of playbook predicated on all hosts properly configured.
+   For example, in the case of a user named <em>admin</em> on a particular host:</p>
+<ul>
+<li>admin must be a member of sudo group</li>
+<li>a folder .ssh must be present in the folder /home/admin</li>
+<li>within .ssh must exist a file named <em>authorized keys</em> into which is a copy of the public key, in this case <em>nuc_rsa.pub</em>.</li>
+<li>an ssh server must be running on the host</li>
+<li><em>/etc/sudoers</em> file must be configured to allow command machine to <em>ssh</em> into host without necessity of using password.</li>
+<li>try password-free ssh into host, for example:<ul>
+<li>ssh -i path_to_keys/nuc_rsa admin@192.168.61.16</li>
+</ul>
+</li>
+<li>permissions important on <em>.ssh</em> folder and <em>authorized_keys</em>.</li>
+</ul>
+<pre><code>  // .ssh drwx------
+  sudo chmod go-rwx .ssh
+
+  // authorized_keys -rw-------
+  sudo chmod 600 authorized_keys
+</code></pre>
+
+<h2>Errors</h2>
+<p><strong>Error 1</strong>
+  You may encounter the following error when certain changes occur on host</p>
+<pre><code>  // attempt ssh into host
+   ssh -i ~/.ssh/nuc_rsa admin@192.168.61.16
+</code></pre>
+
+<pre><code>  // 1st attempt to ssh into host or after other changes e.g. o.s. reinstall.
+
+  Last login: Mon Sep 28 14:56:24 on ttys002
+
+  $ ssh -i ~/.ssh/nuc_rsa ictskills@192.168.61.29
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+
+  Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+
+  It is also possible that a host key has just been changed.
+
+  The fingerprint for the RSA key sent by the remote host is
+
+  bb:8f:69:c2:e9:43:76:a8:3c:c7:e1:60:1f:3d:22:bf.
+
+  Please contact your system administrator.
+
+  Add correct host key in /Users/john/.ssh/known_hosts to get rid of this message.
+
+
+  Offending RSA key in /Users/john/.ssh/known_hosts:8
+
+  RSA host key for 192.168.61.29 has changed and you have requested strict checking.
+
+  Host key verification failed.
+
+</code></pre>
+
+<p>This fixes problem:</p>
+<pre><code>  ssh-keygen -R 192.168.61.29
+
+  // Host 192.168.61.29 found: line 8 type RSA
+  .ssh/known_hosts updated.
+  Original contents retained as /Users/john/.ssh/known_hosts.old
+</code></pre>
+
+<p>Now check it's possible to log in without password:</p>
+<pre><code>  $ ssh -i nuc_rsa ictskills@192.168.61.29
+</code></pre>
+
+<pre><code>  The authenticity of host '192.168.61.29 (192.168.61.29)' can't be established.
+  RSA key fingerprint is bb:8f:69:c2:e9:43:76:a8:3c:c7:e1:60:1f:3d:22:bf.
+  Are you sure you want to continue connecting (yes/no)? yes
+  Warning: Permanently added '192.168.61.29' (RSA) to the list of known hosts.
+  Welcome to Linux Mint 17.2 Rafaela (GNU/Linux 3.16.0-38-generic x86_64)
+</code></pre>
+
+<p>Success at last, t.g.almighty, success at last:</p>
+<pre><code>  Welcome to Linux Mint
+   * Documentation:  http://www.linuxmint.com
+</code></pre>
+
+<p>Or something like that, depending on platform used.</p>
+<p><strong>Error 2</strong>
+The following error has also been encountered on first attempting to run a playbook in the following environments:</p>
+<ul>
+<li>iMac running Yosemite</li>
+<li>NUC running Ubuntu 14</li>
+</ul>
+<pre><code> ansible-playbook -i ansible_hosts update-pwd-gorilla.yml
+</code></pre>
+
+<pre><code>  Traceback (most recent call last):
+    File &quot;/home/admin/ansible/bin/ansible-playbook&quot;, line 40, in &lt;module&gt;
+      from ansible.utils.display import Display
+    File &quot;/home/admin/ansible/lib/ansible/utils/display.py&quot;, line 35, in &lt;module&gt;
+      from ansible import constants as C
+    File &quot;/home/admin/ansible/lib/ansible/constants.py&quot;, line 30, in &lt;module&gt;
+      from ansible.parsing.splitter import unquote
+    File &quot;/home/admin/ansible/lib/ansible/parsing/__init__.py&quot;, line 28, in &lt;module&gt;
+      from yaml import load, YAMLError
+  ImportError: No module named yaml
+</code></pre>
+
+<p>In both casese this problem was solved as follows:</p>
+<pre><code>// Mac
+sudo easy_install pip
+sudo pip install paramiko PyYAML Jinja2 httplib2 six
+</code></pre>
+
+<pre><code>// Linux
+sudo apt-get install python-setuptools
+sudo apt-get install easy_install
+sudo -H pip install paramiko PyYAML Jinja2 httplib2 six
+</code></pre>
+  </div>
+<script>
+$('.ui.menu .item')
+  .tab({
+    history: true,
+    historyType: 'hash'
+  })
+;
+</script>
+   </div>
+
+
+
+  <br><br>
+  <div class="ui bottom fixed borderless menu">
+    <div class="ui small item">
+    <p id="footertext">
+    Prepared by  John Fitzgerald (johnjfitzgerald@outlook.com). Except where otherwise noted, this content is licensed under a
+     <a  href="http://creativecommons.org/licenses/by-nc/4.0/" title="External link to http://creativecommons.org/licenses/by-nc/4.0/"
+       target="_blank">Creative Commons Attribution-NonCommercial 4.0 License
+     </a>
+     </p>
+    </div>
+  </div>    <script>
+
+$(document).ready(function()
+{
+  $("img").addClass ("ui image");
+
+  var images = $(".lab img");
+  jQuery.each(images, function(i)  {
+    if((images[i].alt).length > 0)
+    {
+      var div_img = $(document.createElement("div")).addClass("ui segment");
+      $(images[i]).wrap(div_img);
+      var div_label = $(document.createElement("div")).addClass("ui ribbon teal top attached label");
+      div_label.append(images[i].alt);
+      $(div_label).insertBefore(images[i]);
+    }
+  });
+})    </script>
+
+  </body>
+ </html>

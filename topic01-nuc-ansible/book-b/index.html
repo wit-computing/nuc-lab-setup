@@ -1,0 +1,284 @@
+ <!DOCTYPE html>
+ <html>
+   <head>
+
+     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css" type="text/css">
+     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/solarized_light.min.css" rel="stylesheet" />
+
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/languages/java.min.js"></script>
+     <script>hljs.initHighlightingOnLoad();</script>
+
+      <style>
+
+
+body 
+{
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+}
+
+figcaption
+{
+  margin-bottom: 20px;
+}
+
+.vertical-align
+{
+  display: flex;
+  align-items: center;
+}
+
+.credits
+{
+  min-height:20px;
+}
+    </style>
+
+  </head>
+
+  <body>
+
+  <div class="ui container">
+<style>
+
+
+code
+{
+  font-family: "Monaco";
+  font-size: 110%;
+}
+
+img
+{
+  padding:1px;
+  border:1px solid black;
+}
+
+h1
+{
+  font-style:italic;
+  font-size:130%;
+  border-bottom: thin solid black;
+}
+h2
+{
+  font-size:110%;
+  border-bottom: thin solid black;
+}
+h3
+{
+  font-size:100%;
+  border-bottom: thin solid black;
+}
+
+</style>
+
+<div class="ui fixed top pointing inverted menu labmenu">
+  <header class="header item">
+    <a href="../index.html">
+      <i class="sitemap icon"></i>
+      Customized Linux Configuration
+    </a>
+  </header>
+  <div class="right tab-menu menu">
+    <a class="active item" data-tab="Populate NUC (gparted)">
+        Populate NUC (gparted)
+    </a>
+      <a class="item" data-tab="01">
+        01
+      </a>
+      <a class="item" data-tab="02">
+        02
+      </a>
+      <a class="item" data-tab="03">
+        03
+      </a>
+    </div>
+</div>
+
+<br><br>
+
+  <div  class="ui tab segment lab" data-tab="Populate NUC (gparted)">
+    <h1>Objectives</h1>
+<p>Instructions on cloning an external disk's partitions and content to a NUC internal disk. Method described in this lab also successfully used to copy from one external usb disk to another. Competing technologies considered were Clonezilla, Systemback and the commandline application <em>dd</em>.</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="01">
+    <h1>Approach</h1>
+<p>A number of methods were considered, namely:</p>
+<ul>
+<li>
+<p>Using the Systemback application :</p>
+<ul>
+<li>Use of Systemback is briefly dealt with in step 07 of the previous lab - Android Tools on NUC.</li>
+</ul>
+</li>
+<li>
+<p><a href="http://man7.org/linux/man-pages/man1/dd.1.html">dd</a> unix command</p>
+</li>
+<li>
+<p><a href="http://gparted.org/documentation.php">GNOME Partition Editor (gparted)</a></p>
+</li>
+</ul>
+<p>The most satisfactory outcome was achieved using <em>gparted</em>. The use of <em>gparted</em> only is described in this lab.</p>
+<p>Systemback would have been a second choice.</p>
+<p><em>dd</em> proved too slow for this particular situation where only about 25% of the NUC's capacity contained data. </p>
+<ul>
+<li>In other situations where a complete disk copy would be required, <em>dd</em> might well be the way to go.</li>
+</ul>
+  </div>
+  <div  class="ui tab segment lab" data-tab="02">
+    <h1>Copy source to target</h1>
+<ul>
+<li>Power up the NUC, booting from a live linux usb key.<ul>
+<li>Creating a bootable linux live key is described in the previous lab, step 01.</li>
+</ul>
+</li>
+<li>Connect the source usb disk to the NUC.</li>
+<li>Launch <em>gparted</em></li>
+</ul>
+<pre><code>sudo gparted
+</code></pre>
+
+<ul>
+<li>Create a partition table spanning entire NUC disk (sda). This may require deletion of any existing partitions.<ul>
+<li>Device | Create Partition Table</li>
+</ul>
+</li>
+<li>Copy first sdc1 and then sdc2 from source disk (Figure 1) and paste into target partition.</li>
+<li>For each partition to be copied:<ul>
+<li>Source disk: select the partition, right click to open context menu, then select copy.</li>
+<li>Target disk (NUC): select partition table and paste source-copied partition.</li>
+</ul>
+</li>
+<li>Create a swap partition in target. <ul>
+<li>For a NUC with 16 GiB memory we have chosen a matching size of swap (16384 MB == 16 GiB).</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Figure 1: Source partition" src="img/01.png"></p>
+<ul>
+<li>
+<p>In target partition: apply changes:</p>
+<ul>
+<li>Edit | Apply all operations</li>
+</ul>
+</li>
+<li>
+<p>Resize target sda2 to consume all available space as shown in Figure 2 and Figure 3.</p>
+</li>
+<li>Apply changes:<ul>
+<li>Edit | Apply all operations</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Figure 2: Resizing partition" src="img/02.png"></p>
+<p><img alt="Figure 3: Partition resized" src="img/03.png"></p>
+<ul>
+<li>Change UUIDs of target partitions (sda1, sda2):<ul>
+<li>Select each partition in turn, right click to launch context menu and select New UUID.</li>
+<li>Apply changes:<ul>
+<li>Edit | Apply all operations</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </div>
+  <div  class="ui tab segment lab" data-tab="03">
+    <h1>Repairing bootloader</h1>
+<p>It is likely that the NUC will fail to boot unless modifications are made to its bootloader. </p>
+<ul>
+<li>
+<p>Unmount the source usb drive and unplug from NUC.</p>
+</li>
+<li>
+<p>Ensure the application Boot Repair is installed. If not, <a href="archives/installbootrepair.zip">here</a> is a script to do so.</p>
+<ul>
+<li>Expand the script archive, set its permissions and execute:</li>
+</ul>
+</li>
+</ul>
+<pre><code>unzip installbootrepair.zip
+sudo chmod +x installbootrepair
+sudo ./installbootrepair
+</code></pre>
+
+<p>When installation has completed, the Boot Repair app launches automatically.</p>
+<p><img alt="Figure 1: Boot Repair" src="img/04.png"></p>
+<ul>
+<li>Main options tab: <ul>
+<li>Choose the settings shown in Figure 2 and press OK in the Boot Repair window: Please backup your data before this operation.<ul>
+<li>Note: we never did back up our data and never incurred data loss. However, our decision was made in the knowledge that any such data loss would not be critical.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Figure 2: Boot Repair - Main options" src="img/05.png"></p>
+<ul>
+<li>GRUB location tab: choose the settings shown in Figure 3.</li>
+</ul>
+<p><img alt="Figure 3: Boot Repair - GRUB location" src="img/06.png"></p>
+<ul>
+<li>GRUB options tab: Disable secure boot.</li>
+</ul>
+<p><img alt="Figure 4: Boot Repair - GRUB options" src="img/07.png"></p>
+<ul>
+<li>Other options: all disabled as shown in Figure 5.</li>
+</ul>
+<p><img alt="Figure 5: Boot Repair - Other options" src="img/08.png"></p>
+<p>Press Apply and wait for, hopefull, a successful conclusion.</p>
+<p><img alt="Figure 6: Boot Repair success" src="img/09.png"></p>
+<p>Test by attempting to boot off internal (target) drive.</p>
+  </div>
+<script>
+$('.ui.menu .item')
+  .tab({
+    history: true,
+    historyType: 'hash'
+  })
+;
+</script>
+   </div>
+
+
+
+  <br><br>
+  <div class="ui bottom fixed borderless menu">
+    <div class="ui small item">
+    <p id="footertext">
+    Prepared by  John Fitzgerald (johnjfitzgerald@outlook.com). Except where otherwise noted, this content is licensed under a
+     <a  href="http://creativecommons.org/licenses/by-nc/4.0/" title="External link to http://creativecommons.org/licenses/by-nc/4.0/"
+       target="_blank">Creative Commons Attribution-NonCommercial 4.0 License
+     </a>
+     </p>
+    </div>
+  </div>    <script>
+
+$(document).ready(function()
+{
+  $("img").addClass ("ui image");
+
+  var images = $(".lab img");
+  jQuery.each(images, function(i)  {
+    if((images[i].alt).length > 0)
+    {
+      var div_img = $(document.createElement("div")).addClass("ui segment");
+      $(images[i]).wrap(div_img);
+      var div_label = $(document.createElement("div")).addClass("ui ribbon teal top attached label");
+      div_label.append(images[i].alt);
+      $(div_label).insertBefore(images[i]);
+    }
+  });
+})    </script>
+
+  </body>
+ </html>

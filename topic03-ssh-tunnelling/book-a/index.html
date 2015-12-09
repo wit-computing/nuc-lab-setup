@@ -1,0 +1,287 @@
+ <!DOCTYPE html>
+ <html>
+   <head>
+
+     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css" type="text/css">
+     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/solarized_light.min.css" rel="stylesheet" />
+
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/languages/java.min.js"></script>
+     <script>hljs.initHighlightingOnLoad();</script>
+
+      <style>
+
+
+body 
+{
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+}
+
+figcaption
+{
+  margin-bottom: 20px;
+}
+
+.vertical-align
+{
+  display: flex;
+  align-items: center;
+}
+
+.credits
+{
+  min-height:20px;
+}
+    </style>
+
+  </head>
+
+  <body>
+
+  <div class="ui container">
+<style>
+
+
+code
+{
+  font-family: "Monaco";
+  font-size: 110%;
+}
+
+img
+{
+  padding:1px;
+  border:1px solid black;
+}
+
+h1
+{
+  font-style:italic;
+  font-size:130%;
+  border-bottom: thin solid black;
+}
+h2
+{
+  font-size:110%;
+  border-bottom: thin solid black;
+}
+h3
+{
+  font-size:100%;
+  border-bottom: thin solid black;
+}
+
+</style>
+
+<div class="ui fixed top pointing inverted menu labmenu">
+  <header class="header item">
+    <a href="../index.html">
+      <i class="sitemap icon"></i>
+      Remote desktop and Ansible Configuration
+    </a>
+  </header>
+  <div class="right tab-menu menu">
+    <a class="active item" data-tab="Remote Desktop & Ansible Configuration">
+        Remote Desktop & Ansible Configuration
+    </a>
+      <a class="item" data-tab="01">
+        01
+      </a>
+      <a class="item" data-tab="02">
+        02
+      </a>
+      <a class="item" data-tab="Cutting room bin">
+        Cutting room bin
+      </a>
+    </div>
+</div>
+
+<br><br>
+
+  <div  class="ui tab segment lab" data-tab="Remote Desktop & Ansible Configuration">
+    <h1>Objectives</h1>
+<p>This document describes how a customized Ununtu installation is used to facilitate remote deskop viewing and configuration using Ansible technology. Customization of the Linux install medium comprises the introduction of two additional accounts, one serving the system administrator, the other the student. The system administrator account is configured for ssh tunnelling. The student account is partially ssh configured, requiring that the ssh authorized_keys file be introduced by the user once it has generated its personal ssh key pair, thus limiting access to that account to the student - the owner of the private key.
+Both accounts have administration level privilege.</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="01">
+    <h1>Quick Start (Remote Desktop)</h1>
+<h2>Install the customized Ubuntu in both local and remote hosts.</h2>
+<ul>
+<li>The research resulting in this lab has been carried out on hosts all located on the same subnet. </li>
+<li>There would not seem any reason why the procedure would not be applicable to other network arrangements provided ssh access available betwen local and remote hosts.</li>
+<li>The customized Ubuntu installation medium is designed for use on both local and remote hosts. It includes these applications:<ul>
+<li>x11vnc server</li>
+<li>xtightvncviewer</li>
+<li>fully configured ssh tunnelling for user nucadmin</li>
+<li>partially configured ssh tunnelling for user ictskills</li>
+<li>samba server together with shared folder accessible using nucadmin credentials</li>
+</ul>
+</li>
+</ul>
+<h2>Users on customized installation</h2>
+<p><strong>nucadmin</strong>: this account is intended for system administators and has the following configuration:</p>
+<ul>
+<li>SSH tunnelling</li>
+<li>Samba shared folder (/home/nucadmin/Shared) accessible using nucadmin credentials.</li>
+</ul>
+<p><strong>ictskills</strong>: this account is intended for the student. </p>
+<ul>
+<li>It has administration level privilege.</li>
+<li>To complete ssh-tunnelling facility it is necessary to add an <em>authorized_keys</em> file to its (existing) .ssh folder.</li>
+</ul>
+<h2>Complete <em>ictkills</em> ssh tunnelling configuration</h2>
+<p>Generate an ssh key pair, create an ssh <em>authorized_keys</em> file and add the public key from the key pair just generated, transferring this file to the remote host, all as detailed here:</p>
+<ul>
+<li>Generate key pair in local .ssh folder and include a password as prompted. For example run the following command where you replace the email placeholder with your email:</li>
+</ul>
+<pre><code>ssh-keygen -t rsa -b 4096 -f &quot;ictskills_rsa&quot; -C &quot;your_email@example.com&quot;
+</code></pre>
+
+<p>Create the authorized keys file in the remote host's .ssh folder to which you copy the generated public key (ictskills_rsa.pub):</p>
+<pre><code>scp ~/.ssh/ictskills_rsa.pub ictskills@remote_host_ip:/home/ictskills/.ssh/authorized_keys
+</code></pre>
+
+<p>Set the permissions on authorized_keys:</p>
+<ul>
+<li>ssh into the remote, using the ictskills password using the following commands:</li>
+</ul>
+<pre><code>ssh ictskills@remote_host_ip
+cd ~/.ssh
+sudo chmod 600 authorized_keys
+exit
+</code></pre>
+
+<h2>Launch remote desktop</h2>
+<p>Working on a terminal in the local host:</p>
+<ul>
+<li>Set up ssh tunnelling between local and remote hosts with the following command:</li>
+</ul>
+<pre><code>ssh -i ~/.ssh/ictskills_rsa ictskills@remote_host_ip -L 5900:localhost:5900 &quot;x11vnc -noxdamage&quot;
+</code></pre>
+
+<ul>
+<li>Get remote desktop: open a second terminal and execute the following command</li>
+</ul>
+<pre><code>xtightvncviewer
+</code></pre>
+  </div>
+  <div  class="ui tab segment lab" data-tab="02">
+    <h1>Ansible playbook</h1>
+<p>Here we follow on from the previous step, relying on the same user and environment configurations.</p>
+<p>We use the terms <em>local host</em> and <em>localhost</em>. </p>
+<ul>
+<li>local host means the local computer or virtual device or the like - the local entity possessing an IP address and on which we operate to configure, obtain the remote desktop of, and otherwise engage with a <em>remote host</em> (another such network-accessible entity such as a computer or virtual machine).</li>
+<li>localhost has the conventional meaning, namely <em>this computer</em> and may refer to the local host or the remote host, depending on context.</li>
+</ul>
+<h2>Summary: installation of selected suite of applications to the remote host</h2>
+<p>The following describes how to install the required applications to a remote host. These are the steps required. A more detailed description follows.</p>
+<ul>
+<li>Clone the playbook, <em>nuc-ansible-ictskills</em>:</li>
+</ul>
+<pre><code>git clone https://usplitu@bitbucket.org/usplitu/nuc-ansible-ictskills.git
+</code></pre>
+
+<ul>
+<li>Modify the file <em>site.yml</em>, commenting out (using a # symbol) the applications that you do not wish to install. </li>
+</ul>
+<p><img alt="Figure 1: site.yml" src="img/02.png"></p>
+<ul>
+<li>
+<p>Decide if you wish to install from the remote desktop or from the local host (computer). See Figures 2 and 3.</p>
+</li>
+<li>
+<p>Install Ansible on the host from which you decide to run the playbook</p>
+</li>
+</ul>
+<h2>Detailed instructions: installation of selected suite of applications on remote host</h2>
+<ul>
+<li>Install Ansible on the host on which you intend running the playbook:<ul>
+<li>If you intend installing from the remote desktop then install Ansible on the remote host (computer) ...</li>
+<li>Otherwise instal Ansible on the local host (computer).</li>
+</ul>
+</li>
+</ul>
+<pre><code>sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+</code></pre>
+
+<ul>
+<li>If you intend running the playbook on the remote desktop then uncomment this line in <em>ansible_hosts</em>:</li>
+</ul>
+<pre><code># localhost ansible_connection=local
+</code></pre>
+
+<ul>
+<li>If you intend running the playbook on the local host (to install on the remote host) then uncomment this line in <em>ansible_hosts</em> and make appropriate substitution for the IP address.<ul>
+<li>In this case you will be using the ssh tunnel.</li>
+</ul>
+</li>
+</ul>
+<pre><code>#192.168.61.29 ansible_ssh_private_key_file=~/.ssh/ictskills_rsa ansible_ssh_user=ictskills
+</code></pre>
+
+<h2>Running playbook</h2>
+<p>In a terminal, cd into the cloned <em>nuc-ansible-ictskills</em> and run the following command and expect a result somewhat like that shown in Figure 4.</p>
+<pre><code>ansible-playbook -i ansible_hosts site.yml
+</code></pre>
+
+<p><img alt="Figure 2: Ansible playbook run against localhost - ssh not required" src="img/03.png"></p>
+<p><img alt="Figure 3: Ansible playbook run on remote desktop - ssh tunnel used" src="img/04.png"></p>
+<p><img alt="Figure 4: Playbook run underway installing to remote host using ssh" src="img/05.png"></p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="Cutting room bin">
+    <h1></h1>
+  </div>
+<script>
+$('.ui.menu .item')
+  .tab({
+    history: true,
+    historyType: 'hash'
+  })
+;
+</script>
+   </div>
+
+
+
+  <br><br>
+  <div class="ui bottom fixed borderless menu">
+    <div class="ui small item">
+    <p id="footertext">
+    Prepared by  John Fitzgerald (johnjfitzgerald@outlook.com). Except where otherwise noted, this content is licensed under a
+     <a  href="http://creativecommons.org/licenses/by-nc/4.0/" title="External link to http://creativecommons.org/licenses/by-nc/4.0/"
+       target="_blank">Creative Commons Attribution-NonCommercial 4.0 License
+     </a>
+     </p>
+    </div>
+  </div>    <script>
+
+$(document).ready(function()
+{
+  $("img").addClass ("ui image");
+
+  var images = $(".lab img");
+  jQuery.each(images, function(i)  {
+    if((images[i].alt).length > 0)
+    {
+      var div_img = $(document.createElement("div")).addClass("ui segment");
+      $(images[i]).wrap(div_img);
+      var div_label = $(document.createElement("div")).addClass("ui ribbon teal top attached label");
+      div_label.append(images[i].alt);
+      $(div_label).insertBefore(images[i]);
+    }
+  });
+})    </script>
+
+  </body>
+ </html>

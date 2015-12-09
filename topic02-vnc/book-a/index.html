@@ -1,0 +1,339 @@
+ <!DOCTYPE html>
+ <html>
+   <head>
+
+     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css" type="text/css">
+     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/solarized_light.min.css" rel="stylesheet" />
+
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js"></script>
+     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/languages/java.min.js"></script>
+     <script>hljs.initHighlightingOnLoad();</script>
+
+      <style>
+
+
+body 
+{
+  font-family: "Open Sans", "Helvetica", "Helvetica Neue",  "Arial", sans-serif;
+}
+
+figcaption
+{
+  margin-bottom: 20px;
+}
+
+.vertical-align
+{
+  display: flex;
+  align-items: center;
+}
+
+.credits
+{
+  min-height:20px;
+}
+    </style>
+
+  </head>
+
+  <body>
+
+  <div class="ui container">
+<style>
+
+
+code
+{
+  font-family: "Monaco";
+  font-size: 110%;
+}
+
+img
+{
+  padding:1px;
+  border:1px solid black;
+}
+
+h1
+{
+  font-style:italic;
+  font-size:130%;
+  border-bottom: thin solid black;
+}
+h2
+{
+  font-size:110%;
+  border-bottom: thin solid black;
+}
+h3
+{
+  font-size:100%;
+  border-bottom: thin solid black;
+}
+
+</style>
+
+<div class="ui fixed top pointing inverted menu labmenu">
+  <header class="header item">
+    <a href="../index.html">
+      <i class="sitemap icon"></i>
+      VNC client-server setup virtual network computing (vnc).
+    </a>
+  </header>
+  <div class="right tab-menu menu">
+    <a class="active item" data-tab="Virtual Network Computing (VNC)">
+        Virtual Network Computing (VNC)
+    </a>
+      <a class="item" data-tab="01">
+        01
+      </a>
+      <a class="item" data-tab="02">
+        02
+      </a>
+      <a class="item" data-tab="03">
+        03
+      </a>
+      <a class="item" data-tab="Cutting room bin">
+        Cutting room bin
+      </a>
+    </div>
+</div>
+
+<br><br>
+
+  <div  class="ui tab segment lab" data-tab="Virtual Network Computing (VNC)">
+    <h1>Objectives</h1>
+<p>Configure and test virtual network</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="01">
+    <h1>VNC Viewer</h1>
+<p>Huge array of <a href="https://en.wikipedia.org/wiki/Comparison_of_remote_desktop_software">remote desktop software</a> exists.</p>
+<p>In this lab we focus on Ubutu local and remote base installations.</p>
+<p>Ubuntu comes packaged with</p>
+<ul>
+<li>Remmina vnc viewer</li>
+<li>Vino vnc server</li>
+</ul>
+<p>We shall use the default viewer but a different server, namely <a href="http://www.karlrunge.com/x11vnc/#tunnelling">x11vnc</a> for the following reasons:</p>
+<ul>
+<li>
+<p>Using Vino requires configuration using a GUI window on the server. We prefer to conduct any necessary configuration from the commandline.</p>
+</li>
+<li>
+<p>x11vnc may be installed remotely, using, for example, ansible. Alternatively, it could be included in a customized install liveCD.</p>
+</li>
+<li>
+<p>Most importantly, x11vnc can be configured remotely using ssh.</p>
+</li>
+</ul>
+  </div>
+  <div  class="ui tab segment lab" data-tab="02">
+    <h1>VNC server - viewer configuration</h1>
+<h2>vnc server</h2>
+<p>The following instructions apply to the remote computer.</p>
+<p>Update and upgrade installed software:</p>
+<pre><code>apt-get update
+apt-get upgrade
+</code></pre>
+
+<p>Install <em>x11vnc</em> server using following command:</p>
+<pre><code>apt-get install x11vnc
+</code></pre>
+
+<p>In your home folder, for example /home/ictskills, create <strong>.x11vncrc</strong> file with the following content, the purpose of which is to suppress spurious error messages and warnings:</p>
+<pre><code>nopw
+</code></pre>
+
+<p>Ensure that Sharing in Desktop Sharing Preferences is <strong>not</strong> enabled. See Figure 1.</p>
+<ul>
+<li>This is to ensure that no confusion arises as to which vnc server is accessed by local (client) computer. More than one vnc server may be present. We will be using <em>x11vnc</em> server.</li>
+<li>The default setting is that Sharing is disabled.</li>
+</ul>
+<p><img alt="Figure 1: Desktop Sharing Preferences - ensure Sharing not enabled" src="img/04.png"></p>
+<h2>vnc viewer</h2>
+<p>The following instructions apply to the local computer.</p>
+<p>Update and upgrade installed software:</p>
+<pre><code>apt-get update
+apt-get upgrade
+</code></pre>
+
+<p>Install xtightvncviewer:</p>
+<pre><code>apt-get install xtightvncviewer
+</code></pre>
+
+<p>We use Method 2 technique described in the online article <a href="http://askubuntu.com/questions/304017/how-to-set-up-remote-desktop-sharing-through-ssh">How to set up remote desktop sharing through SSH</a>.</p>
+<p>On the local computer run the equivalent for your machine of the following:</p>
+<pre><code>ssh -i ssh-private-key user@remote-ip -L 5900:localhost:5900 &quot;x11vnc [-create] [-display :display number] -noxdamage&quot;
+</code></pre>
+
+<p>See x11vnc documentation: <a href="http://www.karlrunge.com/x11vnc/x11vnc_opts.html">x11vnc: a VNC server for real X displays</a>.</p>
+<p>Here is a specific example:</p>
+<pre><code>ssh -i ~/.ssh/ictskills_rsa ictskills@192.168.61.16 -L 5900:localhost:5900 &quot;x11vnc -noxdamage&quot;
+</code></pre>
+
+<p>This last command presumes:</p>
+<ul>
+<li>the presence of <em>authorized_keys</em> in the <em>.ssh</em> folder containing a copy of the public key member of the ssh key pair</li>
+<li>availability of no-password access to remote machine by modifying <em>sudoers</em> file. <ul>
+<li>This has been described in an accompanying lab (<em>Populate NUC(ansible)</em>). In this case we have generated a dedicated ssh key pair: <em>ictskills_rsa</em>.</li>
+</ul>
+</li>
+</ul>
+<p>In a separate terminal execute this command:</p>
+<pre><code>xtightvncviewer
+</code></pre>
+
+<p>and in the dialog that opens enter the remote server ip address, for example:</p>
+<pre><code>192.168.61.16
+</code></pre>
+
+<p><img alt="Figure 2: x11vnc remote server started from local computer" src="img/01.png">
+<img alt="Figure 3: Enhanced TightVNC Viewer in process of accessing remote desktop" src="img/02.png">
+<img alt="Figure 4: Remote desktop now present on local computer" src="img/03.png"></p>
+<p>Where the remote machine is running Ubuntu server the above command becomes:</p>
+<pre><code>ssh -i ~/.ssh/ictskills_rsa ictskills@192.168.61.16 -L 5900:localhost:5900 &quot;x11vnc -create -noxdamage&quot;
+</code></pre>
+
+<ul>
+<li>The effect of the added <em>-create</em> is to create an X virtual framebuffer (Xvfb) session if no session is found.</li>
+<li>The option <em>-display: 0</em> specifies that the X11 server should connect to display 0. </li>
+</ul>
+<h2>Summary : A specific example on how to launch remote desktop</h2>
+<ul>
+<li>Remote computer is running customized Ubuntu installation.</li>
+<li>In local computer, also running the same customized Ubuntu installation, do the following:<ul>
+<li>In a terminal execute this statement, substituting the IP address of your remote machine:</li>
+</ul>
+</li>
+</ul>
+<pre><code>ssh -i ~/.ssh/ictskills_rsa ictskills@192.168.61.16 -L 5900:localhost:5900 &quot;x11vnc -noxdamage&quot;
+</code></pre>
+
+<p>This last statement sets up ssh across which the remote terminal will be shared.</p>
+<p>Now to launch the remote desktop:</p>
+<ul>
+<li>In a second terminal execute:</li>
+</ul>
+<pre><code>xtightvncviewer
+</code></pre>
+
+<p>In the dialog box that appears enter the IP of the remote machine, for example:</p>
+<pre><code>192.168.61.16
+</code></pre>
+
+<p>The remote desktop should then launch as shown in Figure 4.</p>
+  </div>
+  <div  class="ui tab segment lab" data-tab="03">
+    <h1>Display Resolution on VirtualBox</h1>
+<h2>Linux Mint</h2>
+<p>No issues.</p>
+<h2>Ubuntu 14.04 on OSX Yosemite</h2>
+<p>Default is VGA 640 x 480 which is quite impossible to work with.</p>
+<p>To resolve this do the following:</p>
+<ul>
+<li>
+<p>Install latest Virtual Box</p>
+</li>
+<li>
+<p>In a terminal locate <em>VBoxGuestAdditions.iso</em>.</p>
+</li>
+</ul>
+<p>Here is the path in OSX (Mac):</p>
+<pre><code>/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso
+</code></pre>
+
+<p>Continue as follow:</p>
+<ul>
+<li>For convenience copy this is to a scratch folder.</li>
+<li>Launch VirtualBox and in the Ubuntu settings mount this iso.</li>
+<li>Run Ubuntu</li>
+<li>cd to the folder containing VBoxGuestAdditions.iso</li>
+<li>Execute the following statement:</li>
+</ul>
+<pre><code>sh ./VBoxLinuxAdditions.run
+</code></pre>
+
+<p>In order to fully update your guest system, open a terminal and run:</p>
+<pre><code>sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install dkms
+</code></pre>
+
+<p>Reboot system and set the appropriate screen resolution in the settings.</p>
+<p>Alternatively, manually resize the display.</p>
+<p>Here is a copy of Virtual Box manual: <a href="archives/VirtualBox-UserManual.pdf">Oracle VMVirtualBox User Manual</a>.</p>
+<ul>
+<li>In particular, refer to page 60, Guest Additions.</li>
+</ul>
+  </div>
+  <div  class="ui tab segment lab" data-tab="Cutting room bin">
+    <h1>Ubuntu server</h1>
+<h2>Start x11vnc server from host</h2>
+<pre><code>ssh -i ~/.ssh/ictskills_rsa ictskills@192.168.61.16 -L 5900:localhost:5900 &quot;x11vnc -create -noxdamage&quot;
+</code></pre>
+
+<h2>Additional software required on server</h2>
+<pre><code>sudo apt-get install x11vnc xorg openbox
+
+</code></pre>
+
+<pre><code>sudo apt get install xvfb
+</code></pre>
+
+<p>Temporary fix:</p>
+<pre><code>sudo vi /etc/X11/Xwrapper.config
+
+allowed_users=anybody
+</code></pre>
+  </div>
+<script>
+$('.ui.menu .item')
+  .tab({
+    history: true,
+    historyType: 'hash'
+  })
+;
+</script>
+   </div>
+
+
+
+  <br><br>
+  <div class="ui bottom fixed borderless menu">
+    <div class="ui small item">
+    <p id="footertext">
+    Prepared by  John Fitzgerald (johnjfitzgerald@outlook.com). Except where otherwise noted, this content is licensed under a
+     <a  href="http://creativecommons.org/licenses/by-nc/4.0/" title="External link to http://creativecommons.org/licenses/by-nc/4.0/"
+       target="_blank">Creative Commons Attribution-NonCommercial 4.0 License
+     </a>
+     </p>
+    </div>
+  </div>    <script>
+
+$(document).ready(function()
+{
+  $("img").addClass ("ui image");
+
+  var images = $(".lab img");
+  jQuery.each(images, function(i)  {
+    if((images[i].alt).length > 0)
+    {
+      var div_img = $(document.createElement("div")).addClass("ui segment");
+      $(images[i]).wrap(div_img);
+      var div_label = $(document.createElement("div")).addClass("ui ribbon teal top attached label");
+      div_label.append(images[i].alt);
+      $(div_label).insertBefore(images[i]);
+    }
+  });
+})    </script>
+
+  </body>
+ </html>
